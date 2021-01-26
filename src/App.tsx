@@ -9,6 +9,7 @@ import {
 
 import Common from "./Common";
 import Login from "./Login";
+import Form from "./Form";
 
 const theme = createMuiTheme({
   palette: {
@@ -23,11 +24,14 @@ const theme = createMuiTheme({
 
 interface IChangeScreenProps {
   pageNumber: number;
+  setPageNumberHandle: (number) => void;
 }
 
 function ChangeScreen(props: IChangeScreenProps) {
   let ele: JSX.Element;
-  if (props.pageNumber === 0) ele = <Login />;
+  if (props.pageNumber === 0)
+    ele = <Login setPageNumberHandle={props.setPageNumberHandle} />;
+  else ele = <Form />;
   return ele;
 }
 
@@ -42,7 +46,10 @@ export default function App() {
             <Button style={{ backgroundColor: "#ec9c9c" }}>ろぐいん</Button>
           ]}
         />
-        <ChangeScreen pageNumber={0} />
+        <ChangeScreen
+          pageNumber={pageNumber}
+          setPageNumberHandle={setPageNumber}
+        />
       </ThemeProvider>
     </Box>
   );

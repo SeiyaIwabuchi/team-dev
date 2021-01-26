@@ -25,12 +25,27 @@ const theme = createMuiTheme({
   }
 });
 
-export default function ButtonAppBar() {
+interface ILoginProps {
+  setPageNumberHandle: (number) => void;
+}
+
+export default function Login(props: ILoginProps) {
   const [open, setOpen] = useState(false);
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
+  const [snackBarMsg, setSnackBarMsg] = useState("");
+  const [collationResult, setCollationResult] = useState(false);
 
-  const handleClick = () => {
+  //ログインボタン押下時に呼び出される
+  const loginHandleClick = () => {
+    if (loginId === "NGuser") {
+      setSnackBarMsg("ログインできません");
+      setCollationResult(false);
+    } else {
+      setCollationResult(true);
+      setSnackBarMsg(`ログインID:${loginId},パスワード:${password}`);
+      props.setPageNumberHandle(1);
+    }
     setOpen(true);
   };
 
@@ -82,7 +97,10 @@ export default function ButtonAppBar() {
             }}
           />
           <br />
-          <Button style={{ backgroundColor: "#ec9c9c" }} onClick={handleClick}>
+          <Button
+            style={{ backgroundColor: "#ec9c9c" }}
+            onClick={loginHandleClick}
+          >
             ログイン
           </Button>
         </Box>
@@ -95,7 +113,7 @@ export default function ButtonAppBar() {
         open={open}
         autoHideDuration={6000}
         onClose={handleClose}
-        message={`ログインID:${loginId},パスワード:${password}`}
+        message={snackBarMsg}
         action={
           <React.Fragment>
             <Button color="secondary" size="small" onClick={handleClose}>
