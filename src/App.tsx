@@ -24,19 +24,35 @@ const theme = createMuiTheme({
 
 interface IChangeScreenProps {
   pageNumber: number;
-  setPageNumberHandle: (number) => void;
+  setPageNumberHandle: (pageNumber: number) => void;
+  setSnackbarOpen: (isOpen: boolean) => void;
+  setSnackbarMsg: (msg: string) => void;
 }
 
 function ChangeScreen(props: IChangeScreenProps) {
   let ele: JSX.Element;
   if (props.pageNumber === 0)
-    ele = <Login setPageNumberHandle={props.setPageNumberHandle} />;
+    ele = (
+      <Login
+        setPageNumberHandle={props.setPageNumberHandle}
+        setSnackBarMsgHandle={props.setSnackbarMsg}
+        setSnackbarOpen={props.setSnackbarOpen}
+      />
+    );
   else ele = <Form />;
   return ele;
 }
 
 export default function App() {
   const [pageNumber, setPageNumber] = useState(0);
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMsg, setSnackbarMsg] = useState("");
+  const snackbarCloseHandle = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
   return (
     <Box>
       <CssBaseline />
@@ -45,10 +61,15 @@ export default function App() {
           additional={[
             <Button style={{ backgroundColor: "#ec9c9c" }}>ろぐいん</Button>
           ]}
+          snackbarCloseHandle={snackbarCloseHandle}
+          snackbarMsg={snackbarMsg}
+          isSnackbarOpen={isSnackbarOpen}
         />
         <ChangeScreen
           pageNumber={pageNumber}
           setPageNumberHandle={setPageNumber}
+          setSnackbarOpen={setSnackbarOpen}
+          setSnackbarMsg={setSnackbarMsg}
         />
       </ThemeProvider>
     </Box>

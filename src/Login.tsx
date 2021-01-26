@@ -12,7 +12,6 @@ import {
   ThemeProvider
 } from "@material-ui/core/styles";
 import { Box, Snackbar, TextField } from "@material-ui/core";
-import CloseIcon from "@material-ui/icons/Close";
 
 const theme = createMuiTheme({
   palette: {
@@ -27,34 +26,30 @@ const theme = createMuiTheme({
 
 interface ILoginProps {
   setPageNumberHandle: (number) => void;
+  setSnackBarMsgHandle: (msg: string) => void;
+  setSnackbarOpen: (isOpen: boolean) => void;
 }
 
 export default function Login(props: ILoginProps) {
-  const [open, setOpen] = useState(false);
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
-  const [snackBarMsg, setSnackBarMsg] = useState("");
   const [collationResult, setCollationResult] = useState(false);
 
   //ログインボタン押下時に呼び出される
   const loginHandleClick = () => {
     if (loginId === "NGuser") {
-      setSnackBarMsg("ログインできません");
+      props.setSnackBarMsgHandle("ログインできません");
       setCollationResult(false);
     } else {
       setCollationResult(true);
-      setSnackBarMsg(`ログインID:${loginId},パスワード:${password}`);
+      props.setSnackBarMsgHandle(
+        `ログインID:${loginId},パスワード:${password}`
+      );
       props.setPageNumberHandle(1);
     }
-    setOpen(true);
+    props.setSnackbarOpen(true);
   };
 
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-  };
   return (
     <Box>
       <Box
@@ -105,31 +100,6 @@ export default function Login(props: ILoginProps) {
           </Button>
         </Box>
       </Box>
-      <Snackbar
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left"
-        }}
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        message={snackBarMsg}
-        action={
-          <React.Fragment>
-            <Button color="secondary" size="small" onClick={handleClose}>
-              UNDO
-            </Button>
-            <IconButton
-              size="small"
-              aria-label="close"
-              color="inherit"
-              onClick={handleClose}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
     </Box>
   );
 }
